@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+app.db
+*.user
+*.suo
+*.sqlite
+*.db-shm
+*.db-wal
+/Presentation/wwwroot/uploads/
+
+# Rider/VS Code
+.idea/
+.vscode/
+.DS_Store
