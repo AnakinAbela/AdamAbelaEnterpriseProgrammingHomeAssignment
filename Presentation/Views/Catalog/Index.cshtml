@@ -1,0 +1,29 @@
+@model IEnumerable<Domain.Models.Restaurant>
+@{
+    ViewData["Title"] = "Catalog";
+}
+
+<h1 class="mb-4">Verified Restaurants</h1>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">No approved restaurants yet. Import data and wait for approvals.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+        @foreach (var restaurant in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@restaurant.Name</h5>
+                        <p class="card-text text-muted small mb-2">Owner: @restaurant.OwnerEmailAddress</p>
+                        <p class="card-text mb-3">@restaurant.MenuItems.Count(mi => mi.Status) approved menu items</p>
+                        <a asp-action="Details" asp-route-id="@restaurant.Id" class="btn btn-outline-primary btn-sm">View menu</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

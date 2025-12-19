@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="py-5">
+    <h1 class="display-5 fw-bold">Restaurant Catalog</h1>
+    <p class="lead">Upload restaurant + menu JSON, collect the images, and publish to the catalog after approvals.</p>
+    <div class="d-flex gap-3">
+        <a class="btn btn-primary btn-lg" asp-controller="BulkImport" asp-action="Index">Bulk Import</a>
+        <a class="btn btn-outline-secondary btn-lg" asp-controller="Catalog" asp-action="Index">View Catalog</a>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+@model IEnumerable<Domain.Models.MenuItem>
+@{
+    ViewData["Title"] = "Approve Menu Items";
+}
+
+<h1 class="mb-4">Approve Menu Items (Restaurant Owner)</h1>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-success">No menu items waiting for your approval.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Restaurant</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>$@item.Price</td>
+                <td>
+                    @if (item.Restaurant != null)
+                    {
+                        @($"{item.Restaurant.Name} ({item.Restaurant.OwnerEmailAddress})")
+                    }
+                    else
+                    {
+                        <span class="text-muted">Unknown restaurant</span>
+                    }
+                </td>
+                <td>
+                    <form asp-action="ApproveMenuItem" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,38 @@
+@model IEnumerable<Domain.Models.Restaurant>
+@{
+    ViewData["Title"] = "Approve Restaurants";
+}
+
+<h1 class="mb-4">Approve Restaurants (Admin)</h1>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-success">No restaurants waiting for approval.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Owner Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var restaurant in Model)
+        {
+            <tr>
+                <td>@restaurant.Name</td>
+                <td>@restaurant.OwnerEmailAddress</td>
+                <td>
+                    <form asp-action="ApproveRestaurant" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@restaurant.Id" />
+                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

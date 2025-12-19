@@ -1,0 +1,95 @@
+@model Presentation.Models.BulkImportViewModel
+@{
+    ViewData["Title"] = "Bulk Import";
+}
+
+<h1 class="mb-4">Bulk Import</h1>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="post" asp-action="Preview" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Upload JSON file</label>
+                        <input type="file" name="jsonFile" class="form-control" accept=".json" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Or paste JSON</label>
+                        <textarea name="json" class="form-control" rows="8" placeholder="Paste JSON content here...">@Model.JsonInput</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Preview</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card bg-light border-0 h-100">
+            <div class="card-body">
+                <h5>How it works</h5>
+                <ol class="small">
+                    <li>Upload or paste the restaurants/menu items JSON.</li>
+                    <li>Download the images ZIP (one folder per menu item, contains default.jpg).</li>
+                    <li>Replace default.jpg with real photos and upload the ZIP back.</li>
+                    <li>Commit the import to push data into the database.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="alert alert-danger mt-3">@Model.Error</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-success mt-3">@Model.Message</div>
+}
+
+@if (Model.Items != null && Model.Items.Any())
+{
+    <div class="d-flex align-items-center gap-3 mt-4">
+        <a class="btn btn-outline-secondary" asp-action="DownloadImageTemplate">Download images ZIP</a>
+        <form method="post" asp-action="UploadImages" enctype="multipart/form-data" class="d-flex align-items-center gap-2">
+            <input type="file" name="imagesZip" class="form-control" accept=".zip" />
+            <button type="submit" class="btn btn-outline-primary">Upload images ZIP</button>
+        </form>
+        <form method="post" asp-action="Commit">
+            <button type="submit" class="btn btn-success">Commit to database</button>
+        </form>
+    </div>
+
+    <h2 class="mt-4">Preview</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Details</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.GetType().Name</td>
+                <td>
+                    @if (item is Domain.Models.Restaurant r)
+                    {
+                        <div><strong>@r.Name</strong></div>
+                        <div class="text-muted small">Owner: @r.OwnerEmailAddress</div>
+                    }
+                    else if (item is Domain.Models.MenuItem m)
+                    {
+                        <div><strong>@m.Title</strong> - $@m.Price</div>
+                        <div class="text-muted small">Restaurant: @m.RestaurantId</div>
+                    }
+                </td>
+                <td><span class="badge bg-warning text-dark">Pending verification</span></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
